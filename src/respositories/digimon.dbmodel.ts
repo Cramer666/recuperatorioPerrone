@@ -3,7 +3,7 @@ import { Digimon } from "../models/digimon";
 
 export type DbEntityId = ObjectId;
 
-export type DbDigimon = Omit<Digimon, 'evolvesFrom' | 'alternateForm'> &  {
+export type DbDigimon = Omit<Digimon, 'evolvesFrom' | 'alternateForms'> & {
   evolvesFrom?: DbEntityId;
-  alternateForm?: DbEntityId;
-}
+  alternateForms?: DbEntityId[];
+};

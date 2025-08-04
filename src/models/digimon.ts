@@ -12,5 +12,7 @@ export interface Digimon {
   description?: string;
   image?: string;
   evolvesFrom?: string;
-  alternateForm?: string;
+  alternateForms?: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
