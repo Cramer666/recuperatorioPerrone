@@ -25,7 +25,7 @@ const DigimonForm: React.FC<DigimonFormProps> = ({
     description: '',
     image: '',
     evolvesFrom: undefined,
-    alternateForm: undefined,
+    alternateForms: [],
   }
   const [formData, setFormData] = useState<Digimon>(digimon ?? defaultDigimon);
 
@@ -41,7 +41,12 @@ const DigimonForm: React.FC<DigimonFormProps> = ({
 
   useEffect(() => {
     if (digimon) {
-      setFormData(digimon);
+      setFormData({
+        ...digimon,
+        alternateForms: Array.isArray(digimon.alternateForms)
+          ? digimon.alternateForms
+          : digimon.alternateForms ? [digimon.alternateForms] : [],
+      });
     }
   }, [digimon]);
 
@@ -52,6 +57,31 @@ const DigimonForm: React.FC<DigimonFormProps> = ({
     setFormData({
       ...formData,
       [name]: value
+    });
+  };
+
+  const handleAlternateFormChange = (index: number, value: string) => {
+    const newAlternateForms = [...(formData.alternateForms ?? [])];
+    newAlternateForms[index] = value;
+    setFormData({
+      ...formData,
+      alternateForms: newAlternateForms,
+    });
+  };
+
+  const addAlternateForm = () => {
+    setFormData({
+      ...formData,
+      alternateForms: [...(formData.alternateForms ?? []), ''],
+    });
+  };
+
+  const removeAlternateForm = (index: number) => {
+    const newAlternateForms = [...(formData.alternateForms ?? [])];
+    newAlternateForms.splice(index, 1);
+    setFormData({
+      ...formData,
+      alternateForms: newAlternateForms,
     });
   };
 
@@ -130,11 +160,11 @@ const DigimonForm: React.FC<DigimonFormProps> = ({
         <Form.Label>Evoluciona de</Form.Label>
         <Form.Select
           name="evolvesFrom"
-          value={formData.evolvesFrom}
+          value={formData.evolvesFrom ?? ''}
           onChange={handleChange}
           disabled={disabled}
         >
-          <option value={undefined}>No seleccionado</option>
+          <option value="">No seleccionado</option>
           {
           // START 4
             digimons.map((op) => (
@@ -146,29 +176,43 @@ const DigimonForm: React.FC<DigimonFormProps> = ({
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="alternateForm">
-        <Form.Label>Forma alternativa</Form.Label>
-        <Form.Select
-          name="alternateForm"
-          value={formData.alternateForm}
-          onChange={handleChange}
-          disabled={disabled}
-        >
-          <option value={undefined}>No seleccionado</option>
-          {
-          // START 4
-            digimons.map((op) => (
-              <option key={op._id} value={op._id}>{op.name}</option>
-            ))
-          // END 4
-          }
-        </Form.Select>
+        <Form.Label>Formas alternativas</Form.Label>
+
+        {(formData.alternateForms ?? []).map((altId, i) => (
+          <Stack key={i} direction="horizontal" gap={2} className="mb-2" >
+            <Form.Select
+              value={altId}
+              onChange={(e) => handleAlternateFormChange(i, e.target.value)}
+              disabled={disabled}
+            >
+              <option value="">No seleccionado</option>
+              {
+              // START 4
+                digimons.map((op) => (
+                  <option key={op._id} value={op._id}>{op.name}</option>
+                ))
+              // END 4
+              }
+            </Form.Select>
+            {!disabled && (
+              <Button variant="danger" onClick={() => removeAlternateForm(i)}>-</Button>
+            )}
+          </Stack>
+        ))}
+
+        {!disabled && (
+          <Button variant="primary" onClick={addAlternateForm}>
+            + Agregar forma alternativa
+          </Button>
+        )}
       </Form.Group>
 
       <Stack direction="horizontal" gap={2}>
-        { !disabled && formData.name && <Button variant="success" onClick={handleSubmit}>
+        {!disabled && formData.name && (
+          <Button variant="success" onClick={() => onGuardar?.(formData)}>
             Guardar
           </Button>
-        }
+        )}
         <Button variant="secondary" onClick={onCancelar}>
           {disabled ? 'Volver' : 'Cancelar'}
         </Button>

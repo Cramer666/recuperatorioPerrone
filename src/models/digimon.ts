@@ -40,7 +40,7 @@ export interface Digimon {
   description?: string;
   image?: string;
   evolvesFrom?: string;
-  alternateForm?: string;
+  alternateForms?: string[];
 }
 
 export type DigimonWithId = Digimon & { _id: string; };
