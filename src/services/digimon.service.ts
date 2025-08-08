@@ -17,13 +17,14 @@ export class DigimonService {
   }
 
   getAll = async (): Promise<EntityWithId[]> => {
-    getLogger().debug(`[Service] Se piden todos los elementos...`);
-    return (await this.repo.getAll()).map((d) => this.toEntityWithStringIds(d));
+    const digimons = await this.repo.getAll();
+    return digimons.map(d => this.toEntityWithStringIds(d));
   };
 
-  getById = async (id: string): Promise<EntityWithId> => {
+
+  getById = async (id: string, includeDeleted = false): Promise<EntityWithId> => {
     getLogger().debug(`[Service] Se pide el elemento con id: ${id}...`);
-    const element = await this.repo.getById(this.repo.toEntityId(id));
+    const element = await this.repo.getById(this.repo.toEntityId(id), includeDeleted);
     return this.toEntityWithStringIds(element);
   };
 

@@ -15,4 +15,5 @@ export interface Digimon {
   alternateForms?: string[];
   createdAt: Date;
   updatedAt: Date;
+  deletedAt?: Date;
 }

@@ -4,6 +4,8 @@ import { getLogger } from './logger.config';
 import { ErrorHandler } from '../middlewares/error.handler';
 import { DigimonRouter } from '../routes/digimon.routes';
 import { NotFoundHandler } from '../middlewares/notFound.handler';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let app : Express;
 

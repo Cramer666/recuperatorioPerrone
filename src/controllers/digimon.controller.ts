@@ -10,11 +10,12 @@ export class DigimonController {
     this.service = service;
   }
 
-  getAllHandler = async (_: Request, res: Response) => {
-    getLogger().debug(`[Controller] Manejando obtener todos...`);
+  getAllHandler = async (req: Request, res: Response) => {
+    getLogger().debug(`[Controller] Obteniendo todos los digimons...`);
     const todos = await this.service.getAll();
     res.json(todos);
   };
+
 
   getByIdHandler = async (req: Request, res: Response) => {
     getLogger().debug(`[Controller] Manejando obtener uno...`);
